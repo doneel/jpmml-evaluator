@@ -229,10 +229,7 @@ public class SparseRegressionModelEvaluator extends SparseModelEvaluator<Regress
 
 	private <V extends Number> Value<V> evaluateRegressionTable(ValueFactory<V> valueFactory, RegressionTable regressionTable, EvaluationContext context){
 		Value<V> result = valueFactory.newValue();
-		long startClock = System.currentTimeMillis();
 		Map<FieldName, Boolean> fieldPresentCache = sparseEvaluatorConfig.getCacheGenerator().apply(context);
-		long millisTaken = System.currentTimeMillis() - startClock;
-		System.out.printf("Spent %s ms generating field presence cache\n", millisTaken);
 
 		if(regressionTable.hasNumericPredictors()){
 			List<NumericPredictor> numericPredictors = regressionTable.getNumericPredictors();
@@ -250,11 +247,7 @@ public class SparseRegressionModelEvaluator extends SparseModelEvaluator<Regress
 					throw new MissingAttributeException(numericPredictor, PMMLAttributes.NUMERICPREDICTOR_COEFFICIENT);
 				}
 
-
-				long evalStartClock = System.currentTimeMillis();
 				FieldValue value = context.evaluate(name);
-				long evalTimeTaken = System.currentTimeMillis() - startClock;
-				System.out.printf("Spent %s ms evaluating numeric field %s\n", millisTaken, name.toString());
 
 				// "If the input value is missing, then the result evaluates to a missing value"
 				if(FieldValueUtil.isMissing(value)){
@@ -301,10 +294,7 @@ public class SparseRegressionModelEvaluator extends SparseModelEvaluator<Regress
 					matchedName = null;
 				}
 
-				long evalStartClock = System.currentTimeMillis();
 				FieldValue value = context.evaluate(name);
-				long evalTimeTaken = System.currentTimeMillis() - startClock;
-				System.out.printf("Spent %s ms evaluating categorical field %s\n", millisTaken, name.toString());
 
 				// "If the input value is missing, then the categorical field is ignored"
 				if(FieldValueUtil.isMissing(value)){
